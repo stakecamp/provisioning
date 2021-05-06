@@ -16,6 +16,8 @@ services:
       DD_API_KEY: ${DD_API_KEY}
       DD_SITE: datadoghq.eu
       DD_LOGS_ENABLED: 'true'
+      DD_PROCESS_AGENT_ENABLED: 'true'
+      DD_LOGS_CONFIG_CONTAINER_COLLECT_ALL: 'true'
       DD_LOGS_CONFIG_DOCKER_CONTAINER_USE_FILE: 'true' 
     volumes: 
       - /var/run/docker.sock:/var/run/docker.sock:ro

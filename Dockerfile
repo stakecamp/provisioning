@@ -1,32 +1,17 @@
-FROM golang:1.15.7 as builder
+FROM golang:1.16 as elrdkeep
 
-RUN apt-get update
+RUN mkdir -p /go/stakecamp/elrdkeep
+WORKDIR /go/stakecamp/elrdkeep
 
-WORKDIR /go/elrond-go
-COPY ./elrond-go .
-RUN GO111MODULE=on go mod vendor
-
-# Elrond node
-WORKDIR /go/elrond-go/cmd/node
-COPY ./stakecamp/logger.go /go/elrond-go/cmd/node/logger.go
-RUN go build -i -v -ldflags="-X main.appVersion=$(git describe --tags --long --dirty)"
-RUN cp /go/pkg/mod/github.com/!elrond!network/arwen-wasm-vm@$(cat /go/elrond-go/go.mod | grep arwen-wasm-vm | sed 's/.* //')/wasmer/libwasmer_linux_amd64.so /lib/libwasmer_linux_amd64.so
-
-# Arwen node
-WORKDIR /go/elrond-go
-RUN go get github.com/ElrondNetwork/arwen-wasm-vm/cmd/arwen@$(cat /go/elrond-go/go.mod | grep arwen-wasm-vm | sed 's/.* //')
-RUN go build -o ./arwen github.com/ElrondNetwork/arwen-wasm-vm/cmd/arwen
-RUN cp /go/elrond-go/arwen /go/elrond-go/cmd/node/
-
-# Keygen
-WORKDIR /go/elrond-go/cmd/keygenerator
+COPY ./stakecamp/elrdkeep .
 RUN go build
 
+FROM elrondnetwork/elrond-go-node:v1.1.54 as builder
 FROM ubuntu:18.04
 
 COPY --from=builder "/go/elrond-go/cmd/node/node" "/usr/bin/elrdnode"
 COPY --from=builder "/go/elrond-go/cmd/node/arwen" "/usr/bin/arwen"
-COPY --from=builder "/go/elrond-go/cmd/keygenerator/keygenerator" "/usr/bin/elrdkeygen"
+COPY --from=elrdkeep "/go/stakecamp/elrdkeep/elrdkeep" "/usr/bin/elrdkeep"
 COPY --from=builder "/lib/libwasmer_linux_amd64.so" "/lib/libwasmer_linux_amd64.so"
 
 ENV ARWEN_PATH /usr/bin/arwen
@@ -34,7 +19,7 @@ ENV ARWEN_PATH /usr/bin/arwen
 ARG CHAIN=mainnet
 
 RUN apt-get -y update 
-RUN apt-get install -y git 
+RUN apt-get install -y git curl
 
 COPY ./elrond-config-${CHAIN} /config
 COPY ./stakecamp/prefs.toml /config/prefs.toml
@@ -45,12 +30,14 @@ RUN mkdir -p /data
 VOLUME [ "/data" ]
 WORKDIR /data
 
+# "--use-log-view", \
+
 CMD ["elrdnode", \
     "--validator-key-pem-file", "/data/validatorKey.pem", \
-    "--use-log-view", \
+    "--disable-ansi-color", \
     "--use-health-service", \
     "--working-directory", "/data", \
-    "--log-level", "*:DEBUG", \
+    "--log-level", "*:INFO", \
     "--rest-api-interface", "0.0.0.0:8080", \
     "--genesis-file", "/config/genesis.json", \
     "--smart-contracts-file", "/config/genesisSmartContracts.json", \
@@ -66,5 +53,5 @@ CMD ["elrdnode", \
     "--gas-costs-config", "/config/gasSchedules" \
 ]
 
+HEALTHCHECK --start-period=20s --interval=1m --timeout=3s --retries=30 CMD curl -f http://0.0.0.0:8080/node/status || exit 1
 EXPOSE 8080
-HEALTHCHECK --start-period=1m --interval=1m --timeout=3s --retries=30 CMD curl -f http://0.0.0.0:8080/node/status || exit 1
