@@ -53,5 +53,5 @@ CMD ["elrdnode", \
     "--gas-costs-config", "/config/gasSchedules" \
 ]
 
-HEALTHCHECK --start-period=30s --interval=2m --timeout=10s --retries=30 CMD elrdkeep --host="0.0.0.0:8080"
+HEALTHCHECK --start-period=30s --interval=2m --timeout=10s --retries=15 CMD elrdkeep --host="0.0.0.0:8080"
 EXPOSE 8080
