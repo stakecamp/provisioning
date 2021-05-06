@@ -13,7 +13,7 @@ services:
   datadog:
     image: gcr.io/datadoghq/agent:7
     environment: 
-      # DD_API_KEY: 
+      DD_API_KEY: ${DD_API_KEY}
       DD_SITE: datadoghq.eu
       DD_LOGS_ENABLED: "true"
       DD_LOGS_CONFIG_CONTAINER_COLLECT_ALL: "true"
