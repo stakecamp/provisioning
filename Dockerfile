@@ -25,8 +25,11 @@ RUN go build
 FROM ubuntu:18.04
 
 COPY --from=builder "/go/elrond-go/cmd/node/node" "/usr/bin/elrdnode"
+COPY --from=builder "/go/elrond-go/cmd/node/arwen" "/usr/bin/arwen"
 COPY --from=builder "/go/elrond-go/cmd/keygenerator/keygenerator" "/usr/bin/elrdkeygen"
 COPY --from=builder "/lib/libwasmer_linux_amd64.so" "/lib/libwasmer_linux_amd64.so"
+
+ENV ARWEN_PATH /usr/bin/arwen
 
 ARG CHAIN=mainnet
 

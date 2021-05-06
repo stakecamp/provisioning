@@ -15,14 +15,14 @@ services:
     environment: 
       DD_API_KEY: ${DD_API_KEY}
       DD_SITE: datadoghq.eu
-      DD_LOGS_ENABLED: "true"
-      DD_LOGS_CONFIG_CONTAINER_COLLECT_ALL: "true"
-      DD_CONTAINER_EXCLUDE_LOGS: name:datadog-agent
+      DD_LOGS_ENABLED: 'true'
+      DD_LOGS_CONFIG_DOCKER_CONTAINER_USE_FILE: 'true' 
     volumes: 
       - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
       - /proc/:/host/proc/:ro
+      - /opt/datadog-agent/run:/opt/datadog-agent/run:rw
       - /sys/fs/cgroup/:/host/sys/fs/cgroup:ro
-      # - /opt/datadog-agent/run:/opt/datadog-agent/run:rw
 
   autoheal:
     image: willfarrell/autoheal
@@ -32,6 +32,8 @@ services:
       AUTOHEAL_CONTAINER_LABEL: all
     volumes: 
       - /var/run/docker.sock:/var/run/docker.sock
+    labels:
+      com.datadoghq.ad.logs: '[{"source": "autoheal", "service": "autoheal"}]'
 
   watchtower:
     image: containrrr/watchtower
@@ -39,5 +41,6 @@ services:
     command: --interval 120
     volumes: 
       - /var/run/docker.sock:/var/run/docker.sock
-
+    labels:
+      com.datadoghq.ad.logs: '[{"source": "watchtower", "service": "watchtower"}]'
   
