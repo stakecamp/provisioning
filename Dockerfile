@@ -22,8 +22,6 @@ RUN apt-get -y update
 RUN apt-get install -y git
 
 COPY ./elrond-config-${CHAIN} /config
-COPY ./stakecamp/prefs.toml /config/prefs.toml
-
 RUN sed -i 's/\.\/config/\/config/' /config/genesisSmartContracts.json
 
 RUN mkdir -p /data
@@ -34,6 +32,7 @@ WORKDIR /data
 
 CMD ["elrdnode", \
     "--validator-key-pem-file", "/data/validatorKey.pem", \
+    "--config-preferences", "/data/prefs.toml", \
     "--disable-ansi-color", \
     "--use-health-service", \
     "--working-directory", "/data", \
@@ -47,7 +46,6 @@ CMD ["elrdnode", \
     "--config-economics", "/config/economics.toml", \
     "--config-systemSmartContracts", "/config/systemSmartContractsConfig.toml", \
     "--config-ratings", "/config/ratings.toml", \
-    "--config-preferences", "/config/prefs.toml", \
     "--config-external", "/config/external.toml", \
     "--p2p-config", "/config/p2p.toml", \
     "--gas-costs-config", "/config/gasSchedules" \
