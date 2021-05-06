@@ -6,7 +6,7 @@ services:
     ports:
       - "8080:8080"
     volumes: 
-      - ./data:/data
+      - ${ELROND_MOUNT_VOLUME}:/data
     labels:
       com.datadoghq.ad.logs: '[{"source": "node", "service": "node"}]'
 
