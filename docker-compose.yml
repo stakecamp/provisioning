@@ -1,0 +1,43 @@
+version: "3.3"
+services:
+  node:
+    build: .
+    image: stakecamp/elrdnode:latest
+    ports:
+      - "8080:8080"
+    volumes: 
+      - ./data:/data
+    labels:
+      com.datadoghq.ad.logs: '[{"source": "node", "service": "node"}]'
+
+  datadog:
+    image: gcr.io/datadoghq/agent:7
+    environment: 
+      # DD_API_KEY: 
+      DD_SITE: datadoghq.eu
+      DD_LOGS_ENABLED: "true"
+      DD_LOGS_CONFIG_CONTAINER_COLLECT_ALL: "true"
+      DD_CONTAINER_EXCLUDE_LOGS: name:datadog-agent
+    volumes: 
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /proc/:/host/proc/:ro
+      - /sys/fs/cgroup/:/host/sys/fs/cgroup:ro
+      # - /opt/datadog-agent/run:/opt/datadog-agent/run:rw
+
+  autoheal:
+    image: willfarrell/autoheal
+    restart: always
+    environment: 
+      DOCKER_SOCK: /var/run/docker.sock
+      AUTOHEAL_CONTAINER_LABEL: all
+    volumes: 
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  watchtower:
+    image: containrrr/watchtower
+    restart: always
+    command: --interval 120
+    volumes: 
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  
