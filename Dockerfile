@@ -19,7 +19,7 @@ ENV ARWEN_PATH /usr/bin/arwen
 ARG CHAIN=mainnet
 
 RUN apt-get -y update 
-RUN apt-get install -y git curl
+RUN apt-get install -y git
 
 COPY ./elrond-config-${CHAIN} /config
 COPY ./stakecamp/prefs.toml /config/prefs.toml
@@ -53,5 +53,5 @@ CMD ["elrdnode", \
     "--gas-costs-config", "/config/gasSchedules" \
 ]
 
-HEALTHCHECK --start-period=20s --interval=1m --timeout=3s --retries=30 CMD curl -f http://0.0.0.0:8080/node/status || exit 1
+HEALTHCHECK --start-period=30s --interval=2m --timeout=10s --retries=30 CMD elrdkeep --host="0.0.0.0:8080"
 EXPOSE 8080
