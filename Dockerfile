@@ -67,4 +67,4 @@ CMD ["elrdnode", \
 ]
 
 EXPOSE 8080
-HEALTHCHECK --start-period=60m --interval=5m --timeout=3s CMD curl -f http://0.0.0.0:8080/node/status || exit 1
+HEALTHCHECK --start-period=1m --interval=1m --timeout=3s --retries=30 CMD curl -f http://0.0.0.0:8080/node/status || exit 1
