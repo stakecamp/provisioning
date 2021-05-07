@@ -13,7 +13,7 @@ git-update-repo:
 docker-build-testnet: git-update-repo
 	@cd elrond-config-testnet && git pull origin master --tags && git checkout ${TAG_TESTNET_CONFIG}
 	@echo "building testnet version ${TAG_TESTNET}"
-	@docker build --build-arg VERSION=${TAG_TESTNET} -t stakecamp/elrdnode:t${TAG_TESTNET} .
+	@docker build --build-arg VERSION=${TAG_TESTNET} --build-arg CHAIN=testnet -t stakecamp/elrdnode:t${TAG_TESTNET} .
 	@cd elrond-config-testnet && git checkout master
 
 docker-push-testnet: docker-build-testnet
@@ -29,7 +29,7 @@ TAG_MAINNET_CONFIG := v1.1.54.0
 docker-build-mainnet: git-update-repo
 	@cd elrond-config-mainnet && git pull origin master --tags && git checkout ${TAG_MAINNET_CONFIG}
 	@echo "building mainnet version ${TAG_MAINNET}"
-	@docker build --build-arg VERSION=${TAG_MAINNET} -t stakecamp/elrdnode . 
+	@docker build --build-arg VERSION=${TAG_MAINNET} --build-arg CHAIN=mainnet -t stakecamp/elrdnode . 
 	@cd elrond-config-mainnet && git checkout master
 
 docker-push-mainnet: docker-build-mainnet

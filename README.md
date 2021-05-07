@@ -5,10 +5,13 @@ This repository we use to enhance deployment and provisioning of elrond nodes. W
 
 ```bash
 $ git clone https://github.com/stakecamp/provisioning.git
-$ git submodule update --init --recursive
 
-$ docker-compose build
-$ docker-compose up -d
+# mainnet
+$ make build # will build mainnet docker image
+$ make run # will run mainnet in docker
+
+# for testing
+$ make docker-run-testnet 
 ```
 
 ## Environment
@@ -22,11 +25,10 @@ So in order to bootstrap in `/etc/enviroment` create two variables:
 
 Docker compose currently contains 4 images:
 
-- `node` which is extended elrond docker image with config of
-  given chain, you can supply arg CHAIN `--build-arg="mainnet|testnet"`.
-- `datadog` is datadog agent, useful for log aggregation and 
+- `node` which is extended elrond docker image containing some imporvmenets, such as elrdkeep healtchecks and default configs.
+- `datadog` is datadog agent, useful for log aggregation and monitoring
 - `autoheal` watching images for health
-- `watchtower` for autoupdates
+- `watchtower` for autoupdates, will update based on docker hub and :latest tag.
 
 
 ## ElrdKeep
@@ -39,7 +41,7 @@ This is useful for being sure node replies to network.
 
 ## Provisioning
 
-Only thin needed is docker and docker-compose:
+Only thing needed is docker and docker-compose:
 
 ```bash
 $ apt-get install -y docker.io docker-compose
@@ -55,5 +57,7 @@ In our case that is done manually and we do revision before pushing new upgraded
 ## Redudndancy nodes
 
 Remember that for every node there should be second one as a backup, that is somehwere else
-ideailly in different datacenter.
+ideally different datacenter.
 
+That being said you want to be carful with Redundancy level to not run same node twice with same level.
+This could cause double singing.
