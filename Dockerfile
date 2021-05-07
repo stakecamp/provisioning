@@ -6,7 +6,7 @@ WORKDIR /go/stakecamp/elrdkeep
 COPY ./stakecamp/elrdkeep .
 RUN go build
 
-FROM elrondnetwork/elrond-go-node:v1.1.54 as builder
+FROM elrondnetwork/elrond-go-node:v1.1.51 as builder
 FROM ubuntu:18.04
 
 COPY --from=builder "/go/elrond-go/cmd/node/node" "/usr/bin/elrdnode"
