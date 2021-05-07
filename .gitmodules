@@ -1,0 +1,6 @@
+[submodule "elrond-config-mainnet"]
+	path = elrond-config-mainnet
+	url = https://github.com/ElrondNetwork/elrond-config-mainnet
+[submodule "elrond-config-testnet"]
+	path = elrond-config-testnet
+	url = https://github.com/ElrondNetwork/elrond-config-testnet

@@ -1,3 +1,5 @@
+ARG VERSION=v1.1.51
+
 FROM golang:1.16 as elrdkeep
 
 RUN mkdir -p /go/stakecamp/elrdkeep
@@ -6,7 +8,7 @@ WORKDIR /go/stakecamp/elrdkeep
 COPY ./stakecamp/elrdkeep .
 RUN go build
 
-FROM elrondnetwork/elrond-go-node:v1.1.51 as builder
+FROM elrondnetwork/elrond-go-node:${VERSION} as builder
 FROM ubuntu:18.04
 
 COPY --from=builder "/go/elrond-go/cmd/node/node" "/usr/bin/elrdnode"

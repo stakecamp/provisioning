@@ -2,15 +2,6 @@
 
 This repository we use to enhance deployment and provisioning of elrond nodes. We are using datadog for monitoring and therefore its part of docker compose.
 
-Clone & Pull:
-
-```bash
-$ git clone https://github.com/stakecamp/provisioning.git
-$ docker-compose up -d
-```
-
-
-Building:
 
 ```bash
 $ git clone https://github.com/stakecamp/provisioning.git
