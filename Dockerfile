@@ -11,6 +11,10 @@ RUN go build
 FROM elrondnetwork/elrond-go-node:${VERSION} as builder
 FROM ubuntu:18.04
 
+
+ARG VERSION
+RUN echo "Building container at version ${VERSION}"
+
 COPY --from=builder "/go/elrond-go/cmd/node/node" "/usr/bin/elrdnode"
 COPY --from=builder "/go/elrond-go/cmd/node/arwen" "/usr/bin/arwen"
 COPY --from=elrdkeep "/go/stakecamp/elrdkeep/elrdkeep" "/usr/bin/elrdkeep"
@@ -38,7 +42,7 @@ CMD ["elrdnode", \
     "--disable-ansi-color", \
     "--use-health-service", \
     "--working-directory", "/data", \
-    "--log-level", "*:INFO", \
+    "--log-level", "*:DEBUG", \
     "--rest-api-interface", "0.0.0.0:8080", \
     "--genesis-file", "/config/genesis.json", \
     "--smart-contracts-file", "/config/genesisSmartContracts.json", \
