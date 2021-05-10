@@ -9,9 +9,6 @@ $ git clone https://github.com/stakecamp/provisioning.git
 # mainnet
 $ make build # will build mainnet docker image
 $ make run # will run mainnet in docker
-
-# for testing
-$ make docker-run-testnet 
 ```
 
 ## Environment

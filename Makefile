@@ -5,16 +5,17 @@ RUN_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
 $(eval $(RUN_ARGS):;@:)
 
 TAG_MAINNET := v1.1.51
-TAG_MAINNET_CONFIG := v1.1.51.1
+TAG_MAINNET_BINARY := v1.1.51.0
+TAG_MAINNET_CONFIG := v1.1.51.0
 
 git-update-repo:
 	@git submodule update --init --recursive
 
 docker-build-mainnet: git-update-repo
-	@-cd elrond-go && git pull origin master --tags && git checkout -q ${TAG_MAINNET} && git describe --tags --long --dirty
-	@-cd elrond-config-mainnet && git pull origin master --tags && git checkout -q ${TAG_MAINNET_CONFIG} && git describe --tags --long --dirty
+	@-cd elrond-go && git pull origin master --tags && git checkout ${TAG_MAINNET} && git describe --tags --long --dirty
+	@-cd elrond-config-mainnet && git pull origin master --tags && git checkout ${TAG_MAINNET_CONFIG} && git describe --tags --long --dirty
 	@echo "building mainnet version ${TAG_MAINNET}"
-	@docker build --progress plain --build-arg VERSION=${TAG_MAINNET} -t stakecamp/elrdnode:${TAG_MAINNET} . 
+	@docker build --progress plain --build-arg VERSION=${TAG_MAINNET_BINARY} -t stakecamp/elrdnode:${TAG_MAINNET} . 
 	@cd elrond-config-mainnet && git checkout master
 	@cd elrond-go && git checkout master
 	@echo "\n\nContainer stakecamp/elrdnode:${TAG_MAINNET}"
