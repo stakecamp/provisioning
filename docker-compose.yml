@@ -25,6 +25,7 @@ services:
       - /proc/:/host/proc/:ro
       - /opt/datadog-agent/run:/opt/datadog-agent/run:rw
       - /sys/fs/cgroup/:/host/sys/fs/cgroup:ro
+      - /mnt/:/host/mnt:ro
 
   autoheal:
     image: willfarrell/autoheal
