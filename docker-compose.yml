@@ -3,6 +3,7 @@ services:
   node:
     build: .
     image: stakecamp/elrdnode:latest
+    restart: always
     ports:
       - "8080:8080"
     volumes: 
@@ -12,6 +13,7 @@ services:
 
   datadog:
     image: gcr.io/datadoghq/agent:7
+    restart: always
     environment: 
       DD_API_KEY: ${DD_API_KEY}
       DD_SITE: datadoghq.eu
