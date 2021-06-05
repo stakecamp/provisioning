@@ -1,7 +1,7 @@
 version: "3.3"
 services:
   node:
-    build: .
+    # build: .
     image: stakecamp/elrdnode:latest
     restart: always
     ports:
