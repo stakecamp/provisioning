@@ -4,9 +4,9 @@ ROOT_DIR := $(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
 RUN_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
 $(eval $(RUN_ARGS):;@:)
 
-TAG_MAINNET := v1.1.66
-TAG_MAINNET_BINARY := v1.1.66.0
-TAG_MAINNET_CONFIG := v1.1.66.0
+TAG_MAINNET := v1.2.22
+TAG_MAINNET_BINARY := v1.2.22.0
+TAG_MAINNET_CONFIG := v1.2.22.0
 
 git-update-repo:
 	@git submodule update --init --recursive

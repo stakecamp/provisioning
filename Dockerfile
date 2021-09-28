@@ -1,4 +1,4 @@
-ARG VERSION=v1.1.54
+ARG VERSION=v1.2.22
 
 
 FROM golang:1.15.7 as builder
@@ -15,11 +15,6 @@ WORKDIR /go/elrond-go/cmd/node
 RUN go build -i -v -ldflags="-X main.appVersion=${VERSION}"
 RUN cp /go/pkg/mod/github.com/!elrond!network/arwen-wasm-vm@$(cat /go/elrond-go/go.mod | grep arwen-wasm-vm | sed 's/.* //' | tail -n 1)/wasmer/libwasmer_linux_amd64.so /lib/libwasmer_linux_amd64.so
 
-WORKDIR /go/elrond-go
-RUN go get github.com/ElrondNetwork/arwen-wasm-vm/cmd/arwen@$(cat /go/elrond-go/go.mod | grep arwen-wasm-vm | sed 's/.* //' | head -n 1)
-RUN go build -o ./arwen github.com/ElrondNetwork/arwen-wasm-vm/cmd/arwen
-RUN cp /go/elrond-go/arwen /go/elrond-go/cmd/node/
-
 
 FROM golang:1.16 as elrdkeep
 
@@ -33,12 +28,10 @@ RUN go build
 FROM ubuntu:18.04
 
 ARG VERSION
-ENV ARWEN_PATH /usr/bin/arwen
 
 RUN echo "Building container at version ${VERSION}"
 
 COPY --from=builder "/go/elrond-go/cmd/node/node" "/usr/bin/elrdnode"
-COPY --from=builder "/go/elrond-go/cmd/node/arwen" "/usr/bin/arwen"
 COPY --from=elrdkeep "/go/stakecamp/elrdkeep/elrdkeep" "/usr/bin/elrdkeep"
 COPY --from=builder "/lib/libwasmer_linux_amd64.so" "/lib/libwasmer_linux_amd64.so"
 
@@ -71,6 +64,7 @@ CMD ["elrdnode", \
     "--config-ratings", "/config/ratings.toml", \
     "--config-external", "/config/external.toml", \
     "--p2p-config", "/config/p2p.toml", \
+    "--epoch-config", "/config/enableEpochs.toml", \
     "--gas-costs-config", "/config/gasSchedules" \
 ]
 
