@@ -36,7 +36,7 @@ COPY --from=elrdkeep "/go/stakecamp/elrdkeep/elrdkeep" "/usr/bin/elrdkeep"
 COPY --from=builder "/lib/libwasmer_linux_amd64.so" "/lib/libwasmer_linux_amd64.so"
 
 
-RUN apt-get -y update 
+RUN apt-get -y update
 RUN apt-get install -y git
 
 COPY ./elrond-config-mainnet /config
