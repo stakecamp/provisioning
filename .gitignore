@@ -86,3 +86,4 @@ dist
 *.dylib
 *.test
 *.out
+.ssh

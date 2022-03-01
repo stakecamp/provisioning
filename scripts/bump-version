@@ -61,10 +61,8 @@ const updateVersion = (repo, pathname) => getVersion(repo)
   .then((version) => {
     const currentVersion = readVersion(pathname)
     if (currentVersion !== version) {
-      console.log(`Updating ${pathname} to ${version}`)
+      console.log(`Updating ${currentVersion} to ${version}`)
       writeVersion(pathname, version)
-    } else {
-      console.log(`${pathname} is already up to date`)
     }
   }).catch(console.error)
 
