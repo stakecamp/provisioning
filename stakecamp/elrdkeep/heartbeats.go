@@ -17,9 +17,11 @@ type Heartbeat struct {
 	PeerType         string    `json:"peerType"`
 	Nonce            int       `json:"nonce"`
 	NumInstances     int       `json:"numInstances"`
+	PidString        string    `json:"pidString"`
+	PeerSubType      int       `json:"peerSubType"`
 }
 
-type heatbeatsReply struct {
+type HeartbeatResponse struct {
 	Data struct {
 		Heartbeats []Heartbeat `json:"heartbeats"`
 	} `json:"data"`
